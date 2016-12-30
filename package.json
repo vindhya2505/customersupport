@@ -24,6 +24,8 @@
   "homepage": "https://github.com/vindhya2505/customersupport#readme",
   "dependencies": {
     "botbuilder": "^3.4.4",
+    "https": "^1.0.0",
+    "restful-api": "^0.1.8",
     "restify": "^4.3.0"
   }
 }
