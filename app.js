@@ -22,6 +22,25 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 // Create bot dialogs
-bot.dialog('/', function (session) {
+
+bot.dialog('/', [
+    function (session) {
+        session.beginDialog('/askName');
+    },
+    function (session, results) {
+        session.send('Hello %s!', results.response);
+    }
+]);
+bot.dialog('/askName', [
+    function (session) {
+        builder.Prompts.text(session, 'Hi! What is your name?');
+    },
+    function (session, results) {
+        session.endDialogWithResult(results);
+    }
+]);
+
+
+/*bot.dialog('/', function (session) {
     session.send("Hello ! I can help you with 1. Address update, 2. Add vehicle to the Policy. Please choose the options 1..2..");
-});
+});*/
