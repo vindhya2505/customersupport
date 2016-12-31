@@ -28,7 +28,8 @@ bot.dialog('/', [
         session.beginDialog('/askName');
     },
     function (session, results) {
-        session.send('Hello %s!', results.response);
+        session.send('Hello %s! How may I help you?', results.response);
+		session.beginDialog('rootMenu');
     }
 ]);
 bot.dialog('/askName', [
@@ -39,6 +40,33 @@ bot.dialog('/askName', [
         session.endDialogWithResult(results);
     }
 ]);
+
+// Add root menu dialog
+bot.dialog('rootMenu', [
+    function (session) {
+        builder.Prompts.choice(session, "Choose an option:", 'Address Update|Add New Vehicle to Policy|Buy Policy|Quit');
+    },
+    function (session, results) {
+        switch (results.response.index) {
+            case 0:
+                session.beginDialog('updateAddress');
+                break;
+            case 1:
+                session.beginDialog('newVehicle');
+                break;
+            case 2:
+                session.beginDialog('buyPolicy');
+                break;
+            default:
+                session.endDialog();
+                break;
+        }
+    },
+    function (session) {
+        // Reload menu
+        session.replaceDialog('rootMenu');
+    }
+]).reloadAction('showMenu', null, { matches: /^(menu|back)/i });
 
 
 /*bot.dialog('/', function (session) {
