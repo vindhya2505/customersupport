@@ -23,5 +23,5 @@ server.post('/api/messages', connector.listen());
 
 // Create bot dialogs
 bot.dialog('/', function (session) {
-    session.send("Hello World");
+    session.send("Hello ! I can help you with 1. Address update, 2. Add vehicle to the Policy. Please choose the options 1..2..");
 });
