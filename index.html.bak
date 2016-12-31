@@ -1,1 +1,19 @@
-
+<!doctype html>
+<html>
+   <head>
+      <title>MyAppID</title>
+	  <style>
+  #botstyle {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+  }
+</style>
+   </head>
+   <body>
+    <div id="foo">  
+<iframe src="https://webchat.botframework.com/embed/InsCustomerSupport?
+s=8hbL3b_BU1E.cwA.9TU.6NKjqFWS3jpOtqUA2wV1FhJABPUSgPi_ZEWXDNkE6Uw" style="height: 502px; max-height: 502px;float:right"></iframe>
+</div>
+   </body>
+</html>
