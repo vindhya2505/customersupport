@@ -74,60 +74,20 @@ bot.dialog('updateAddress', [
     },
     function (session,results) {
 
-			switch (results.resonse.index) {
-            case 0:
-               // session.beginDialog('doorNumber');
-
-			 console.log("[200] " + req.method + " to " + req.url);
-          res.writeHead(200, "OK", {'Content-Type': 'text/html'});
-          res.write('<html><head><title>Hello<body>');
-          res.write('<h1>Welcomeo are you?</h1>');
-          res.write('<form="application/x-www-form-urlencoded" action="/formhandler" method="post">');
-          res.write('DoorNumber : <input type="text" name="dno" value="" /><br />');
-          res.write('Address1 :<input type="text" name="addr1" value="" /><br />');
-          res.write('<input type="submit"  value="submit"/>');
-          res.write('</form></body></html>');
-                break;
-            case 1:
-                session.beginDialog('address1');
-                break;
-            case 2:
-                session.beginDialog('city');
-                break;
-			case 3:
-				session.beginDialog('State');
-				break;
-            default:
-                session.endDialog();
-                break;
-        }
+		session.send('your address: %s', results.response);
+		session.beginDialog('confirmAddress');
         
     }
 ]);
 
-bot.dialog('doorNumber', [
+bot.dialog('confirmAddress', [
     function (session, args) {
-        builder.Prompts.number(session, "Enter Door Number")
+        builder.Prompts.text(session, "Please confirm the address")
     },
     function (session, results) {
-
-			switch (results.response.index) {
-            case 0:
-                session.beginDialog('doorNumber');
-                break;
-            case 1:
-                session.beginDialog('address1');
-                break;
-            case 2:
-                session.beginDialog('city');
-                break;
-			case 3:
-				session.beginDialog('State');
-				break;
-            default:
-                session.endDialog();
-                break;
-        }
+		
+		session.send('Thanks for confirming the address', results.response);
+			
         
     }
 ]);
