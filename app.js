@@ -86,7 +86,7 @@ bot.dialog('confirmAddress', [
     },
     function (session, results) {
 		
-		session.send('Thanks for confirming the address. This address will be updated.', results.response);
+		session.send('Thanks for confirming the address. Address updated.', results.response);
 			
         
     }
