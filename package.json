@@ -23,9 +23,22 @@
   },
   "homepage": "https://github.com/vindhya2505/customersupport#readme",
   "dependencies": {
+    "bluebird": "^3.4.7",
+    "body-parser": "^1.15.2",
     "botbuilder": "^3.4.4",
+    "express": "3.x",
+    "html": "^1.0.0",
+    "http": "0.0.0",
     "https": "^1.0.0",
+    "jade": "^1.11.0",
+    "mysql": "^2.12.0",
+    "path": "^0.12.7",
+    "pug": "^2.0.0-beta6",
+    "querystring": "^0.2.0",
+    "request": "^2.79.0",
     "restful-api": "^0.1.8",
-    "restify": "^4.3.0"
+    "restify": "^4.3.0",
+    "serve-favicon": "^2.3.2",
+    "xml2js": "^0.4.17"
   }
 }
