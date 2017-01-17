@@ -22,6 +22,38 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 
+var arr	= [];
+var addrData	= [];
+
+
+function getCustomerDetails(key){
+ http.get("http://lowcost-env.mv7nkzxkh2.us-west-2.elasticbeanstalk.com/customers/"+key, function(res) { 
+	  var d = '';  
+      arr = [];  
+	      res.on('data', function(chunk) {  
+            d += chunk;  
+        }); 
+			res.on('end', function() {
+			var e  =JSON.parse(d);		
+			arr.push({  
+                    "id": e.id,  
+                    "firstName": e.firstName,  
+                    "lastName": e.lastName,  
+                    "email": e.email  ,
+					"mobile": e.mobile  ,
+					"dateOfBirth": e.dateOfBirth ,
+					"address": e.address  
+                }); 
+			console.log("address" +arr[0]['id']);
+			console.log("address" +arr[0]['address']);
+			//console.log("address var" +address);
+        });  
+	  });  
+}
+
+
+
+
 bot.dialog('/', [
     function (session, args, next) {
       

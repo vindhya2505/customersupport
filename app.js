@@ -147,3 +147,22 @@ bot.dialog('/support', [
 		  session.replaceDialog("/address");
     }  
 ]);
+
+var intents = new builder.IntentDialog();  
+bot.dialog('/address', intents);  
+
+intents.matches(/^yes?/i, [  
+    function(session) {  
+     
+	   var cust = arr[0];  
+		session.userData.custid=cust.id;
+	 session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
+	  builder.Prompts.text(session, "Please enter pin code of new address");  
+		
+    },  
+    function(session, results) {  
+		session.userData.pincode= results.response;
+        validatepincode(session.userData.pincode);	
+			
+    }  
+]); 
