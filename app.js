@@ -22,6 +22,38 @@ var bot = new builder.UniversalBot(connector);
 server.post('/api/messages', connector.listen());
 
 
+var arr	= [];
+var addrData	= [];
+
+
+function getCustomerDetails(key){
+ http.get("http://lowcost-env.mv7nkzxkh2.us-west-2.elasticbeanstalk.com/customers/"+key, function(res) { 
+	  var d = '';  
+      arr = [];  
+	      res.on('data', function(chunk) {  
+            d += chunk;  
+        }); 
+			res.on('end', function() {
+			var e  =JSON.parse(d);		
+			arr.push({  
+                    "id": e.id,  
+                    "firstName": e.firstName,  
+                    "lastName": e.lastName,  
+                    "email": e.email  ,
+					"mobile": e.mobile  ,
+					"dateOfBirth": e.dateOfBirth ,
+					"address": e.address  
+                }); 
+			console.log("address" +arr[0]['id']);
+			console.log("address" +arr[0]['address']);
+			//console.log("address var" +address);
+        });  
+	  });  
+}
+
+
+
+
 bot.dialog('/', [
     function (session, args, next) {
       
@@ -82,9 +114,36 @@ bot.dialog('/rootMenu', [
         session.send("Please choose an option from the menu:");
         builder.Prompts.choice(session, "", ["BUY OR RENEW", "POLICY STATUS", "GENERAL ASSISTANCE"]);
     },
-    function (session, results) {
-       
-		console.log("option" +results.repsonse);
+	 function (session, results) {
+        switch (results.response.entity) {
+            case "BUY OR RENEW":
+                session.replaceDialog("/buyorrenew");
+                break;
+			case "POLICY STATUS":
+				session.replaceDialog("/policystatus");
+				break;
+            default:
+                session.replaceDialog("/support");
+				
+                break;
+        }
+		//console.log("option" +results.repsonse.entity);
     },
+   function (session) {
+        // Reload menu
+        session.replaceDialog('/rootMenu');
+    }
    
 ]).reloadAction('showMenu', null, { matches: /^(menu|back)/i });
+
+bot.dialog('/support', [
+   function(session) {  
+        builder.Prompts.text(session, 'Hi '+session.userData.name+" ! what is the exact assistance you are looking for?");  
+    },  
+    function(session, results) {  
+        session.send('O.k You are looking for assistance related to  - %s', results.response);  
+        var b = [];  
+     	getCustomerDetails(session.userData.name);
+		  session.replaceDialog("/address");
+    }  
+]);
