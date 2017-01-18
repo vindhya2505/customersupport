@@ -124,7 +124,6 @@ bot.dialog('/', [
     },
     function (session,args, next) {
 		 if (!session.userData.name) {
-			 console.log("I am here");
 		 session.beginDialog('/profile');
 		 }else{
 		 next();

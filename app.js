@@ -103,10 +103,35 @@ bot.dialog('/profile', [
     },
 	function (session, results) {
         session.userData.email = results.response;
-        //builder.Prompts.choice(session, "What language do you code Node using?", ["JavaScript", "CoffeeScript", "TypeScript"]);
+       
 		session.send("Thanks you for providing your details."); 
 			session.endDialog();
     }
 ]);
 
+bot.dialog('/rootMenu', [
+    function (session) {
+        session.send("Please choose an option from the menu:");
+        builder.Prompts.choice(session, "", ["BUY OR RENEW", "POLICY STATUS", "GENERAL ASSISTANCE"]);
+    },
+    function (session, results) {
+        switch (results.response.entity) {
+            case "BUY OR RENEW":
+                session.replaceDialog("/buyorrenew");
+                break;
+			case "POLICY STATUS":
+				session.replaceDialog("/policystatus");
+				break;
+            default:
+                session.replaceDialog("/support");
+				
+                break;
+        }
+		//console.log("option" +results.repsonse.entity);
+    },
+    function (session) {
+        // Reload menu
+        session.replaceDialog('/rootMenu');
+    }
+]).reloadAction('showMenu', null, { matches: /^(menu|back)/i });
 
