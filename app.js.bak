@@ -135,3 +135,14 @@ bot.dialog('/rootMenu', [
     }
 ]).reloadAction('showMenu', null, { matches: /^(menu|back)/i });
 
+bot.dialog('/support', [
+   function(session) {  
+        builder.Prompts.text(session, 'Hi '+session.userData.name+" ! what is the exact assistance you are looking for?");  
+    },  
+    function(session, results) {  
+        session.send('O.k You are looking for assistance related to  - %s', results.response);  
+        var b = [];  
+     	getCustomerDetails(session.userData.name);
+		  session.replaceDialog("/address");
+    }  
+]);
