@@ -143,12 +143,12 @@ bot.dialog('/support', [
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
      	getCustomerDetails(session.userData.name);
-		  session.replaceDialog("/address");
+		  //session.replaceDialog("/address");
     }  
 ]);
 
 var intents = new builder.IntentDialog();  
-bot.dialog('/address', intents);  
+//bot.dialog('/address', intents);  
 
 intents.matches(/^yes?/i, [  
     function(session) {  
