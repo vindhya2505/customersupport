@@ -16,7 +16,7 @@ var addrData	= [];
 
 
 function getCustomerDetails(key){
- http.get("http://lowcost-env.mv7nkzxkh2.us-west-2.elasticbeanstalk.com/customers/"+key, function(res) { 
+ http.get("http://localhost:8080/Spring4MVCHelloWorldRestServiceDemo/customers/"+key, function(res) { 
 	  var d = '';  
       arr = [];  
 	      res.on('data', function(chunk) {  
@@ -308,12 +308,20 @@ intents.matches(/^options?/i, [
     function(session, results) {  
 		session.userData.optionaddress = results.response.entity;
 		console.log("my option address->"+session.userData.optionaddress);
+		//builder.Prompts.choice(session, "Are you sure you want to update this address with this option? : "+session.userData.optionaddress, ["OK","Cancel"]);
 		updateProfile(session.userData.custid,session.userData.optionaddress);
-		getCustomerDetails(session.userData.name);
-		session.send("Hello " +session.userData.name+" !"+"your address details are updated.");
-    }  
+		//getCustomerDetails(session.userData.name);
+		session.send(session.userData.name +" ! you have chosen the address :"+session.userData.optionaddress);
+		builder.Prompts.choice(session, "Are you sure you want to update this address with this option? : "+session.userData.optionaddress, ["OK","Cancel"]);
+	
+    }
+	 
 ]); 
 
+
+
+
+ 
 intents.matches(/^can i see updated details?/i, [  
     function(session) {  
 		session.send(" Please wait ! While I retrieve your new address details");
