@@ -142,7 +142,7 @@ bot.dialog('/support', [
     function(session, results) {  
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
-     	getCustomerDetails(session.userData.name);
+     //	getCustomerDetails(session.userData.name);
 		  session.replaceDialog("/address");
     }  
 ]);
