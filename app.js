@@ -27,7 +27,7 @@ var addrData	= [];
 
 
 function getCustomerDetails(key){
- http.get("http://lowcost-env.mv7nkzxkh2.us-west-2.elasticbeanstalk.com/customers/"+key, function(res) { 
+ http.get("http://localhost:8080/customers/"+key, function(res) { 
 	  var d = '';  
       arr = [];  
 	      res.on('data', function(chunk) {  
@@ -142,7 +142,7 @@ bot.dialog('/support', [
     function(session, results) {  
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
-     	//getCustomerDetails(session.userData.name);
+     	getCustomerDetails(session.userData.name);
 		  session.replaceDialog("/address");
     }  
 ]);

@@ -36,6 +36,7 @@
     "pug": "^2.0.0-beta6",
     "querystring": "^0.2.0",
     "request": "^2.79.0",
+    "rest-api": "0.0.3",
     "restful-api": "^0.1.8",
     "restify": "^4.3.0",
     "serve-favicon": "^2.3.2",

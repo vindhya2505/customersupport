@@ -28,39 +28,7 @@ function getBooksData(key) {
         });  
     });  
 }  
-function getCustomerDetails(key){
-// http.get("http://lowcost-env.mv7nkzxkh2.us-west-2.elasticbeanstalk.com/customers/"+key, function(res) { 
-   http.get("http://localhost:8080/Spring4MVCHelloWorldRestServiceDemo/customers/"+key, function(res) { 
-	  var d = '';  
-        var i;  
-        arr = [];  
-	
-        res.on('data', function(chunk) {  
-            d += chunk;  
-        }); 
 
-			res.on('end', function() {
-			var e  =JSON.parse(d);
-			console.log("e:::"+e);
-			console.log("I am from the local service ::::" + ":" + e.firstName); 
-			console.log("I am from the local service ::::" + ":" + e.address); 
-			console.log("I am from the local service ::::" + ":" + e.dateOfBirth); 
-			address =e.address;
-			arr.push({  
-                    "id": e.id,  
-                    "firstName": e.firstName,  
-                    "lastName": e.lastName,  
-                    "email": e.email  ,
-					"mobile": e.mobile  ,
-					"dateOfBirth": e.dateOfBirth ,
-					"address": e.address  
-                }); 
-			console.log("address" +arr[0]['address']);
-			console.log("address var" +address);
-              
-        });  
-	  });  
-}
 function getCarData(key) {  
     http.get("http://www.regcheck.org.uk/api/reg.asmx/CheckIndia?RegistrationNumber=" + key + "&username=vindhya", function(res) {  
         var d = '';  
@@ -71,8 +39,8 @@ function getCarData(key) {
         });  
         res.on('end', function() {  
 			console.log(d);  
-			var jsonText = JSON.stringify(d);
-		
+			var jsonText = JSON.stringify(xmlToJson(d));
+
            /* var e = JSON.parse(d);  
             for (i = 0; i < e.items.length; i++) {  
                 console.log(i + 1 + ":" + e.items[i].vehicleJson.Description);  
@@ -83,53 +51,45 @@ function getCarData(key) {
 }
 
 
-
-
-function updateProfile(key,updatefield){
+// Changes XML to JSON
+function xmlToJson(xml) {
 	
-var jsonObject = JSON.stringify(
-	  {"id":"C101","firstName":"abc","lastName":"k","email":"vindy@gmail.com","mobile":"121-232-3435","dateOfBirth":1484116667527,"address":updatefield}
-	);
+	// Create the return object
+	var obj = {};
 
-// prepare the header
-var headers = {
-    'Content-Type' : 'application/json',
-    'Content-Length' : Buffer.byteLength(jsonObject, 'utf8')
+	if (xml.nodeType == 1) { // element
+		// do attributes
+		if (xml.attributes.length > 0) {
+		obj["@attributes"] = {};
+			for (var j = 0; j < xml.attributes.length; j++) {
+				var attribute = xml.attributes.item(j);
+				obj["@attributes"][attribute.nodeName] = attribute.nodeValue;
+			}
+		}
+	} else if (xml.nodeType == 3) { // text
+		obj = xml.nodeValue;
+	}
+
+	// do children
+	//if (xml.childNodes()) {
+		for(var i = 0; i < xml.childNodes.length; i++) {
+			var item = xml.childNodes.item(i);
+			var nodeName = item.nodeName;
+			if (typeof(obj[nodeName]) == "undefined") {
+				obj[nodeName] = xmlToJson(item);
+			} else {
+				if (typeof(obj[nodeName].push) == "undefined") {
+					var old = obj[nodeName];
+					obj[nodeName] = [];
+					obj[nodeName].push(old);
+				}
+				obj[nodeName].push(xmlToJson(item));
+			}
+		}
+	//}
+	return obj;
 };
-// the post options
-var optionsput = {
-    host : 'localhost',
-    port : 8080,
-    path : "/Spring4MVCHelloWorldRestServiceDemo/customers/update/"+key,
-    method : 'PUT',
-    headers : headers
-};
 
-console.info('Options prepared:');
-console.info(optionsput);
-console.info('Do the PUT call');
-// do the POST call
-var reqPut = http.request(optionsput, function(res) {
-    console.log("statusCode: ", res.statusCode);
-    // uncomment it for header details
-//  console.log("headers: ", res.headers);
- 
-    res.on('data', function(d) {
-        console.info('PUT result:\n');
-        process.stdout.write(d);
-        console.info('\n\nPUT completed');
-    });
-});
- 
-// write the json data
-reqPut.write(jsonObject);
-reqPut.end();
-reqPut.on('error', function(e) {
-    console.error(e);
-});
- 
-
-}
 
 
 
@@ -142,10 +102,8 @@ intents.matches(/^Hi/i, [
     function(session, results) {  
         session.send('Here are books for topic - %s.', results.response);  
         var b = [];  
-      // getBooksData(results.response);  
-		//getCarData("KA05MR7326");
-		//getCustomerDetails("abc");
-		updateProfile("C101","JP nagar hulimavu bangalore");
+      //  getBooksData(results.response);  
+		getCarData("KA05MR7326");
     },  
     function(session) {  
         builder.Prompts.text(session, 'which books');  
@@ -154,22 +112,15 @@ intents.matches(/^Hi/i, [
 intents.matches(/^info?/i, [  
     function(session) {  
         builder.Prompts.choice(session, "Which book's info you need?", "1|2|3|4|5");  
-		 var cust = arr[0];  
-		 console.log("I am from session ::::" + ":" + cust.firstName); 
     },  
     function(session, results) {  
-		console.log("results.response.entity "+results.response.entity );
-       // var cust = arr[0];  
-      /*  if (book.saleability == 'FOR_SALE') {  
+        var book = arr[results.response.entity - 1];  
+        if (book.saleability == 'FOR_SALE') {  
             session.send('Title:' + book.title + " Price:" + book.price.amount + " " + book.price.currencyCode);  
         } else {  
             session.send('Title:' + book.title + " Price: NOT FOR SALE");  
-        }  */
-		//console.log("I am from tdailooge ::::" + ":" + cust.firstName); 
-	//		console.log("I am from tdailooge ::::" + ":" + cust.address); 
-		//	console.log("I am from tdailooge ::::" + ":" + cust.dateOfBirth); 
-     //   session.send('Description:' + cust.address);  
-		
+        }  
+        session.send('Description:' + book.description);  
     }  
 ]);  
 intents.onDefault(builder.DialogAction.send('Hi there! How can I help you today?'));  
