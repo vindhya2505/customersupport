@@ -191,6 +191,7 @@ intents.matches(/^yes?/i, [
     function(session, results) {  
 		session.userData.pincode= results.response;
         validatepincode(session.userData.pincode);	
+		session.send("enteres pin code",results.response);
 			
     }  
 ]); 

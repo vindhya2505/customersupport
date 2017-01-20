@@ -182,9 +182,9 @@ bot.dialog('/address', intents);
 intents.matches(/^yes?/i, [  
     function(session) {  
      
-	   var cust = arr[0];  
-		session.userData.custid=cust.id;
-	 session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
+	 //  var cust = arr[0];  
+	//	session.userData.custid=cust.id;
+	// session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
 	  builder.Prompts.text(session, "Please enter pin code of new address");  
 		
     },  
