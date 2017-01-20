@@ -33,8 +33,8 @@ function getCustomerDetails(key){
 					"dateOfBirth": e.dateOfBirth ,
 					"address": e.address  
                 }); 
-			console.log("address" +arr[0]['id']);
-			console.log("address" +arr[0]['address']);
+		//	console.log("address" +arr[0]['id']);
+		//	console.log("address" +arr[0]['address']);
 			//console.log("address var" +address);
         });  
 	  });  
@@ -72,7 +72,8 @@ https.get("https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?
 function updateProfile(key,updatefield){
 	
 	var jsonObject = JSON.stringify(
-		  {"id":"C101","firstName":"abc","lastName":"k","email":"vindy@gmail.com","mobile":"121-232-3435","dateOfBirth":1484116667527,"address":updatefield}
+		  {"id":"C101","firstName":"John","lastName":"k","email":"vindy@gmail.com","mobile":"121-232-3435","dateOfBirth":1484116667527,"address":updatefield}
+		
 		);
 
 	// prepare the header
@@ -89,19 +90,14 @@ function updateProfile(key,updatefield){
 		headers : headers
 	};
 
-	console.info('Options prepared:');
-	console.info(optionsput);
-	console.info('Do the PUT call');
-	// do the POST call
+
 	var reqPut = http.request(optionsput, function(res) {
-		console.log("statusCode: ", res.statusCode);
-		// uncomment it for header details
-	//  console.log("headers: ", res.headers);
+
 	 
 		res.on('data', function(d) {
-			console.info('PUT result:\n');
-			process.stdout.write(d);
-			console.info('\n\nPUT completed');
+		//	console.info('PUT result:\n');
+		//	process.stdout.write(d);
+		//	console.info('\n\nPUT completed');
 		});
 	});
 	 
@@ -114,7 +110,6 @@ function updateProfile(key,updatefield){
 }
 
 
-
 bot.dialog('/', [
     function (session, args, next) {
       
@@ -124,7 +119,7 @@ bot.dialog('/', [
     },
     function (session,args, next) {
 		 if (!session.userData.name) {
-			 console.log("I am here");
+			 //console.log("I am here");
 		 session.beginDialog('/profile');
 		 }else{
 		 next();
@@ -133,7 +128,7 @@ bot.dialog('/', [
 	function (session,args, next) {
 		
 		 session.beginDialog('/rootMenu');
-		 //next();
+		// next();
 		
     },
 		
@@ -171,8 +166,8 @@ bot.dialog('/profile', [
     },
 	function (session, results) {
         session.userData.email = results.response;
-        //builder.Prompts.choice(session, "What language do you code Node using?", ["JavaScript", "CoffeeScript", "TypeScript"]);
-		session.send("Thanks you for providing your details."); 
+      
+		session.send("Thank you for providing your details."); 
 			session.endDialog();
     }
 ]);
@@ -244,10 +239,7 @@ bot.dialog('/showcardetails', [
 		//var cardetails = carData[session.userData.carnumber];
 		getCustomerDetails(session.userData.name);
 		var customer =arr[0];
-console.log("customer::" +customer.address);
-
-      //   session.send("your car model %(model)d and make year %(year)s.", cardetails); 
-		 //builder.Prompts.text(session, "Please enter RTO ID eg: MH01 MH02");
+		console.log("customer::" +customer.address);
     },
     function (session, results) {
       console.log(" cardetails :" +cardetails);
@@ -263,9 +255,12 @@ bot.dialog('/support', [
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
      	getCustomerDetails(session.userData.name);
-		  session.replaceDialog("/address");
+		
+		  session.beginDialog("/address");
     }  
 ]);
+
+
 
 
 
@@ -275,10 +270,13 @@ bot.dialog('/address', intents);
 intents.matches(/^yes?/i, [  
     function(session) {  
      
-	   var cust = arr[0];  
-		session.userData.custid=cust.id;
+	 var cust = arr[0];  
+	 //var custJson = {"id":cust.id,"firstName":cust.firstName,"lastName":cust.lastName,"email":cust.email,"mobile":cust.mobile,"dateOfBirth":cust.dateOfBirth,"address": "?" };
+	 //session.userData.custData=custJson;
+	 session.userData.custid=cust.id;
+	 
 	 session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
-	  builder.Prompts.text(session, "Please enter pin code of new address");  
+	 builder.Prompts.text(session, "Please enter pin code of new address");  
 		
     },  
     function(session, results) {  
@@ -301,39 +299,38 @@ intents.matches(/^options?/i, [
 			}
 		 }
 		 arr =[];
-		console.log("arr length>"+arr.length);
+		
 	 builder.Prompts.choice(session, "we have the these options to suggest for the pincode entered"+session.userData.pincode+" :  Choose your option ", choicestr);
 
     },  
     function(session, results) {  
+		 arr =[];
 		session.userData.optionaddress = results.response.entity;
-		console.log("my option address->"+session.userData.optionaddress);
-		//builder.Prompts.choice(session, "Are you sure you want to update this address with this option? : "+session.userData.optionaddress, ["OK","Cancel"]);
+		
 		updateProfile(session.userData.custid,session.userData.optionaddress);
-		//getCustomerDetails(session.userData.name);
 		session.send(session.userData.name +" ! you have chosen the address :"+session.userData.optionaddress);
-		builder.Prompts.choice(session, "Are you sure you want to update this address with this option? : "+session.userData.optionaddress, ["OK","Cancel"]);
+		
+		
 	
-    },
-	 function (session, results) {
-        switch (results.response.index) {
-            case 0:
-                session.replaceDialog("/update");
-                break;
-			case 1:
-				session.replaceDialog("/noupdate");
-				break;
-            default:
-                session.replaceDialog("/rootMenu");
-				
-                break;
-        }
-		//console.log("option" +results.repsonse.entity);
     }
-
+	 
 ]); 
 
 
+intents.matches(/^please update/i, [  
+    function(session) {  
+		
+	builder.Prompts.choice(session, "Are you sure you want to update this address with this option?: "+session.userData.optionaddress, "OK|Cancel");
+    },  
+    function(session, results) {  
+		session.userData.sureaddress = results.response.entity;
+		//console.log("my option ->"+session.userData.sureaddress);
+		getCustomerDetails(session.userData.name);
+		
+	
+    }
+	 
+]); 
 
 
  
@@ -352,13 +349,11 @@ intents.matches(/^can i see updated details?/i, [
 intents.matches(/^ok/i, [  
     function(session) {  
 		 var cust = arr[0];  
-		//session.userData.custid=cust.id;
-		console.log("arr length>"+cust.address);
 	 session.send(" Your new  details are : :ID: "+cust.id+" Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
     },  
     function(session, results) {  
-		  session.send(" Thanks you");
-		session.beginDialog("/rootMenu");
+		  session.send(" Thank you",results.response);
+		
     }  
 ]); 
 

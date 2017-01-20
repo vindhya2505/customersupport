@@ -51,7 +51,34 @@ function getCustomerDetails(key){
 	  });  
 }
 
+function validatepincode(key){
+https.get("https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?pin="+key+"&project-app-key=18t3orqpqwhhmp1ssdfm7ett", function(res) { 
+	  var d = '';  
+      addrData = [];  
+	   var i;  
 
+	      res.on('data', function(chunk) {  
+            d += chunk;  
+        }); 
+			res.on('end', function() {
+			var e  =JSON.parse(d);		
+			//console.log(e);
+		//	addrData.push({"responsecode":e.ResponseCode});
+			 for (i = 0; i < e.Data.length; i++) {  
+               console.log(i + 1 + ":" + e.Data[i].Address);  
+				  addrData.push({  
+                    "address": e.Data[i].Address,  
+                    "city": e.Data[i].City,  
+                    "state": e.Data[i].State,  
+                    "country": e.Data[i].Country,
+					"pincode" :e.Data[i].Pincode
+                });  
+                
+            }  
+
+        });  
+	  });  
+}
 
 
 bot.dialog('/', [
@@ -142,7 +169,7 @@ bot.dialog('/support', [
     function(session, results) {  
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
-     	getCustomerDetails(session.userData.name);
+     //	getCustomerDetails(session.userData.name);
 		  session.replaceDialog("/address");
     }  
 ]);

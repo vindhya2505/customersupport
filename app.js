@@ -51,7 +51,34 @@ function getCustomerDetails(key){
 	  });  
 }
 
+function validatepincode(key){
+https.get("https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?pin="+key+"&project-app-key=18t3orqpqwhhmp1ssdfm7ett", function(res) { 
+	  var d = '';  
+      addrData = [];  
+	   var i;  
 
+	      res.on('data', function(chunk) {  
+            d += chunk;  
+        }); 
+			res.on('end', function() {
+			var e  =JSON.parse(d);		
+			//console.log(e);
+		//	addrData.push({"responsecode":e.ResponseCode});
+			 for (i = 0; i < e.Data.length; i++) {  
+               console.log(i + 1 + ":" + e.Data[i].Address);  
+				  addrData.push({  
+                    "address": e.Data[i].Address,  
+                    "city": e.Data[i].City,  
+                    "state": e.Data[i].State,  
+                    "country": e.Data[i].Country,
+					"pincode" :e.Data[i].Pincode
+                });  
+                
+            }  
+
+        });  
+	  });  
+}
 
 
 bot.dialog('/', [
@@ -155,9 +182,9 @@ bot.dialog('/address', intents);
 intents.matches(/^yes?/i, [  
     function(session) {  
      
-	   var cust = arr[0];  
-		session.userData.custid=cust.id;
-	 session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
+	 //  var cust = arr[0];  
+	//	session.userData.custid=cust.id;
+	// session.send(" Your current  details are : :ID: "+cust.id+"Name:" + cust.firstName + ", Last Name: " + cust.lastName + ", Email :" + cust.email+ ", Address : " + cust.address);  
 	  builder.Prompts.text(session, "Please enter pin code of new address");  
 		
     },  
