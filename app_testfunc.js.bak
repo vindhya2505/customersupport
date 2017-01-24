@@ -52,7 +52,7 @@ function getCarData(key) {
 
 
 function getCustomerDetails(key){
- https.get("https://0f188222.ngrok.io/Spring4MVCHelloWorldRestServiceDemo/customers/"+key, function(res) { 
+ http.get("http://localhost:8080/customers/"+key, function(res) { 
 	  var d = '';  
       arr = [];  
 	      res.on('data', function(chunk) {  

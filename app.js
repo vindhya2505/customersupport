@@ -27,7 +27,7 @@ var addrData	= [];
 
 
 function getCustomerDetails(key){
- http.get("http://localhost:8080/customers/"+key, function(res) { 
+ https.get("https://0f188222.ngrok.io/Spring4MVCHelloWorldRestServiceDemo/customers/"+key, function(res) { 
 	  var d = '';  
       arr = [];  
 	      res.on('data', function(chunk) {  
@@ -50,6 +50,7 @@ function getCustomerDetails(key){
         });  
 	  });  
 }
+
 
 function validatepincode(key){
 https.get("https://www.whizapi.com/api/v2/util/ui/in/indian-city-by-postal-code?pin="+key+"&project-app-key=18t3orqpqwhhmp1ssdfm7ett", function(res) { 
@@ -169,7 +170,7 @@ bot.dialog('/support', [
     function(session, results) {  
         session.send('O.k You are looking for assistance related to  - %s', results.response);  
         var b = [];  
-     //	getCustomerDetails(session.userData.name);
+     	getCustomerDetails(session.userData.name);
 		  session.replaceDialog("/address");
     }  
 ]);
